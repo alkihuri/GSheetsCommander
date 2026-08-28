@@ -1,0 +1,13 @@
+{
+  "name": "com.gsheetcommander.core",
+  "version": "0.1.0",
+  "displayName": "GSheetsCommander",
+  "description": "A reusable Unity package for communicating with Google Sheets through Google Apps Script.",
+  "unity": "2021.3",
+  "author": {
+    "name": "GSheetsCommander"
+  },
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
+  }
+}
