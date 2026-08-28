@@ -28,6 +28,21 @@ namespace GSheetsCommander
         public Task<List<SheetInfo>> ListSheetsAsync(CancellationToken cancellationToken = default) => SendAsync<List<SheetInfo>>("listSheets", new { }, cancellationToken);
         /// <summary>Gets one sheet's metadata.</summary>
         public Task<SheetInfo> GetSheetAsync(string sheet, CancellationToken cancellationToken = default) => SendAsync<SheetInfo>("getSheet", new { sheet = Require(sheet, nameof(sheet)) }, cancellationToken);
+        /// <summary>Gets one sheet's metadata, or <see langword="null"/> when the sheet does not exist.</summary>
+        public async Task<SheetInfo> TryGetSheetAsync(string sheet, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await GetSheetAsync(sheet, cancellationToken);
+            }
+            catch (GoogleSheetsException exception) when (exception.Code == "SHEET_NOT_FOUND")
+            {
+                return null;
+            }
+        }
+        /// <summary>Checks whether a sheet tab exists without throwing when it is absent.</summary>
+        public async Task<bool> SheetExistsAsync(string sheet, CancellationToken cancellationToken = default) =>
+            await TryGetSheetAsync(sheet, cancellationToken) != null;
         /// <summary>Creates a sheet tab.</summary>
         public Task<SheetInfo> CreateSheetAsync(string name, CancellationToken cancellationToken = default) => SendAsync<SheetInfo>("createSheet", new { name = Require(name, nameof(name)) }, cancellationToken);
         /// <summary>Renames a sheet tab.</summary>

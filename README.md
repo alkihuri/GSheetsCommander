@@ -64,13 +64,18 @@ public class Example : MonoBehaviour
         await client.SetRangeAsync("Users", "A1:B2", new object[][] { new object[] { "A", "B" } });
         await client.AppendRowAsync("Users", new object[] { "Ada", "active" });
         await client.UpdateRowAsync("Users", 2, new object[] { "Ada", "inactive" });
-        await client.CreateSheetAsync("Archive");
+        if (await client.SheetExistsAsync("Archive"))
+            Debug.Log("Archive already exists");
+        else
+            await client.CreateSheetAsync("Archive");
         var sheets = await client.ListSheetsAsync();
     }
 }
 ```
 
 Every request is an HTTP POST envelope containing `action`, a unique `requestId`, the API key, and a `payload`. Use `SendAsync<T>` when extending the backend with an operation not represented by the convenience methods.
+
+Use `SheetExistsAsync("Sheet name")` to check for a tab without handling a missing-sheet exception. `TryGetSheetAsync("Sheet name")` returns its `SheetInfo`, or `null` when it does not exist. Both methods only handle the expected `SHEET_NOT_FOUND` response; configuration, access, and network errors are still returned as exceptions.
 
 ## Error handling
 

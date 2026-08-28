@@ -74,7 +74,11 @@ namespace GSheetsCommander.Tests
             try
             {
                 await client.HealthAsync();
+                Assert.That(await client.SheetExistsAsync(name), Is.False);
+                Assert.That(await client.TryGetSheetAsync(name), Is.Null);
                 await client.CreateSheetAsync(name);
+                Assert.That(await client.SheetExistsAsync(name), Is.True);
+                Assert.That(await client.TryGetSheetAsync(name), Is.Not.Null);
                 await client.SetCellAsync(name, "A1", "value");
                 await client.GetCellAsync(name, "A1");
                 await client.SetRangeAsync(name, "A2:B2", new object[][] { new object[] { "one", "two" } });
@@ -84,6 +88,7 @@ namespace GSheetsCommander.Tests
                 await client.ListSheetsAsync();
                 await client.RenameSheetAsync(name, name + "_Renamed");
                 await client.DeleteSheetAsync(name + "_Renamed");
+                Assert.That(await client.SheetExistsAsync(name + "_Renamed"), Is.False);
             }
             finally { UnityEngine.Object.DestroyImmediate(integrationConfig); }
         }
