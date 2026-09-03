@@ -31,6 +31,13 @@ namespace GSheetsCommander.Tests
         }
 
         [Test]
+        public void Configuration_CanEnableGetRequests()
+        {
+            config.Configure("https://script.google.com/macros/s/example/exec", "test-key", useGetRequests: true);
+            Assert.That(config.UseGetRequests, Is.True);
+        }
+
+        [Test]
         public void Request_SerializesExpectedEnvelope()
         {
             var request = new GoogleSheetsRequest { action = "getCell", requestId = "id", apiKey = "key", payload = new { sheet = "Users", cell = "A1" } };

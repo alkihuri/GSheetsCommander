@@ -73,7 +73,7 @@ public class Example : MonoBehaviour
 }
 ```
 
-Every request is an HTTP POST envelope containing `action`, a unique `requestId`, the API key, and a `payload`. Use `SendAsync<T>` when extending the backend with an operation not represented by the convenience methods.
+Every request is an HTTP POST envelope containing `action`, a unique `requestId`, the API key, and a `payload`. For WebGL builds that cannot send CORS POSTs, set `useGetRequests: true` on the config/client or pass `true` to the convenience methods so the request becomes a GET with flattened query parameters; the backend should then parse `action`, `requestId`, `apiKey`, and the remaining fields as top-level params. Use `SendAsync<T>` when extending the backend with an operation not represented by the convenience methods.
 
 Use `SheetExistsAsync("Sheet name")` to check for a tab without handling a missing-sheet exception. `TryGetSheetAsync("Sheet name")` returns its `SheetInfo`, or `null` when it does not exist. Both methods only handle the expected `SHEET_NOT_FOUND` response; configuration, access, and network errors are still returned as exceptions.
 
